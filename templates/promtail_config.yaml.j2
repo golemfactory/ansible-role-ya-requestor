@@ -1,0 +1,17 @@
+server:
+  disable: true
+
+positions:
+  filename: {{ ya_requestor_dir }}/promtail_positions.yaml
+
+clients:
+  - url: {{ ya_requestor_loki_url }}
+
+scrape_configs:
+- job_name: golem
+  static_configs:
+  - labels:
+      hostname: "{{ ya_requestor_name }}"
+      job: "{{ ya_requestor_promtail_job }}"
+      service: yagna
+      __path__: {{ ya_requestor_dir }}/yagna_datadir/yagna_rCURRENT.log

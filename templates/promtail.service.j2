@@ -1,0 +1,13 @@
+[Unit]
+Description=promtail for {{ ya_requestor_name }} ya-requestor yagna
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={{ ya_requestor_promtail_bin }} -config.file={{ ya_requestor_dir }}/promtail_config.yaml
+TimeoutStartSec=10m
+LimitNOFILE=10000
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,17 @@
+- name: Restart promtail
+  systemd:
+    scope: user
+    daemon_reload: yes
+    name: "{{ ya_requestor_yagna_unit_name }}-promtail"
+    enabled: yes
+    state: restarted
+  when: (ya_requestor_promtail_start | default({})) is not changed
+
+- name: Restart requestor
+  systemd:
+    scope: user
+    daemon_reload: yes
+    name: "{{ ya_requestor_yagna_unit_name }}"
+    enabled: yes
+    state: restarted
+  when: (ya_requestor_start | default({})) is not changed

@@ -1,0 +1,96 @@
+- name: Create releases directory
+  file:
+    path: "{{ ya_requestor_releases_dir }}"
+    state: directory
+
+- name: Unpack yagna
+  unarchive:
+    src: "{{ ya_requestor_yagna_url }}"
+    dest: "{{ ya_requestor_releases_dir }}/"
+    remote_src: "{{ ya_requestor_yagna_url is search('://') | ternary('yes','no') }}"
+    creates: "{{ ya_requestor_yagna_dir }}"
+
+- name: Unpack promtail
+  when: ya_requestor_promtail_install
+  block:
+
+    - name: Create promtail directory
+      file:
+        path: "{{ ya_requestor_promtail_dir }}"
+        state: directory
+
+    - name: Download promtail
+      unarchive:
+        src: "{{ ya_requestor_promtail_url }}"
+        dest: "{{ ya_requestor_promtail_dir }}/"
+        remote_src: "{{ ya_requestor_promtail_url is search('://') | ternary('yes','no') }}"
+        creates: "{{ ya_requestor_promtail_bin }}"
+
+    - name: Symlink promtail
+      file:
+        state: link
+        src: "promtail-linux-amd64"
+        dest: "{{ ya_requestor_promtail_dir }}/promtail"
+
+- name: Create requestor dir
+  file:
+    path: "{{ ya_requestor_dir }}"
+    state: directory
+
+- name: Install .env
+  template:
+    src: .env.j2
+    dest: "{{ ya_requestor_dir }}/.env"
+
+- name: Install run_yagna.sh
+  copy:
+    src: run_yagna.sh
+    dest: "{{ ya_requestor_dir }}/run_yagna.sh"
+    mode: "755"
+
+- name: Configure promtail
+  when: ya_requestor_promtail_run_service
+  template:
+    src: promtail_config.yaml.j2
+    dest: "{{ ya_requestor_dir }}/promtail_config.yaml"
+
+- name: Create systemd unit directory
+  file:
+    # TODO: support XDG_CONFIG_HOME if someone actually uses it
+    path: "{{ ansible_user_dir }}/.config/systemd/user"
+    state: directory
+
+- name: Install promtail service
+  template:
+    src: promtail.service.j2
+    dest: "{{ ansible_user_dir }}/.config/systemd/user/{{ ya_requestor_yagna_unit_name }}-promtail.service"
+
+- name: Install service
+  template:
+    src: yagna.service.j2
+    dest: "{{ ansible_user_dir }}/.config/systemd/user/{{ ya_requestor_yagna_unit_name }}.service"
+
+- name: Enable loginctl linger
+  command:
+    cmd: "loginctl enable-linger"
+    creates: "/var/lib/systemd/linger/{{ ansible_user_id }}"
+
+- name: Start promtail
+  when: ya_requestor_promtail_run_service
+  systemd:
+    scope: user
+    daemon_reload: yes
+    name: "{{ ya_requestor_yagna_unit_name }}-promtail"
+    enabled: yes
+    state: started
+  register: ya_requestor_promtail_start
+
+- name: Start ya-requestor yagna
+  when: ya_requestor_run_yagna_service
+  systemd:
+    scope: user
+    daemon_reload: yes
+    name: "{{ ya_requestor_yagna_unit_name }}"
+    enabled: yes
+    state: started
+  register: ya_requestor_start
