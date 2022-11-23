@@ -31,6 +31,7 @@
         state: link
         src: "promtail-linux-amd64"
         dest: "{{ ya_requestor_promtail_dir }}/promtail"
+      notify: Restart promtail
 
 - name: Create requestor dir
   file:
@@ -41,18 +42,21 @@
   template:
     src: .env.j2
     dest: "{{ ya_requestor_dir }}/.env"
+  notify: Restart requestor
 
 - name: Install run_yagna.sh
   copy:
     src: run_yagna.sh
     dest: "{{ ya_requestor_dir }}/run_yagna.sh"
     mode: "755"
+  notify: Restart requestor
 
 - name: Configure promtail
   when: ya_requestor_promtail_run_service
   template:
     src: promtail_config.yaml.j2
     dest: "{{ ya_requestor_dir }}/promtail_config.yaml"
+  notify: Restart promtail
 
 - name: Create systemd unit directory
   file:
@@ -64,11 +68,13 @@
   template:
     src: promtail.service.j2
     dest: "{{ ansible_user_dir }}/.config/systemd/user/{{ ya_requestor_yagna_unit_name }}-promtail.service"
+  notify: Restart promtail
 
 - name: Install service
   template:
     src: yagna.service.j2
     dest: "{{ ansible_user_dir }}/.config/systemd/user/{{ ya_requestor_yagna_unit_name }}.service"
+  notify: Restart requestor
 
 - name: Enable loginctl linger
   command:
