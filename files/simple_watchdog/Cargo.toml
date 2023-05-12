@@ -1,0 +1,12 @@
+[package]
+name = "simple_watchdog"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.70"
+chrono = "0.4.24"
+clap = { version = "4.2.4", features = ["derive"] }
+duration-string = "0.3.0"
+lazy_static = "1.4.0"
+regex = "1.8.1"

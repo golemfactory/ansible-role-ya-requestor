@@ -1,0 +1,12 @@
+[Unit]
+Description={{ ya_requestor_name }} simple watchdog
+
+[Service]
+Type=oneshot
+WorkingDirectory={{ ya_requestor_dir }}
+ExecStart={{ ya_requestor_dir }}/simple_watchdog \
+    --datadir "{{ ya_requestor_dir }}/yagna_datadir" \
+{% for unit in ya_requestor_simple_watchdog_manage_units %}
+    --unit "{{ unit }}" \
+{% endfor %}
+    --time-window "{{ ya_requestor_simple_watchdog_time_window }}"

@@ -1,7 +1,11 @@
 ya_requestor_dir: "{{ ansible_user_dir }}/{{ ya_requestor_name }}"
 ya_requestor_releases_dir: "{{ ansible_user_dir }}/releases"
-ya_requestor_yagna_unit_name: "ya-requestor-{{ ya_requestor_name }}-yagna"
+ya_requestor_unit_base_name: "ya-requestor-{{ ya_requestor_name }}"
+ya_requestor_yagna_unit_name: "{{ ya_requestor_unit_base_name }}-yagna"
 ya_requestor_yagna_dir: "{{ ya_requestor_releases_dir }}/{{ ya_requestor_yagna_package_prefix }}-{{ ya_requestor_yagna_version }}"
 
 ya_requestor_promtail_dir: "{{ ya_requestor_releases_dir }}/promtail_{{ ya_requestor_promtail_version }}"
 ya_requestor_promtail_bin: "{{ ya_requestor_promtail_dir }}/promtail-linux-amd64"
+
+ya_requestor_simple_watchdog_manage_units:
+  - "{{ ya_requestor_yagna_unit_name }}.service"

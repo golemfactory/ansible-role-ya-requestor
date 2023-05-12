@@ -1,0 +1,8 @@
+[Unit]
+Description={{ ya_requestor_name }} simple watchdog
+
+[Timer]
+OnCalendar={{ ya_requestor_simple_watchdog_when }}
+
+[Install]
+WantedBy=timers.target

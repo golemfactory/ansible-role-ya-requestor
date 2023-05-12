@@ -100,3 +100,58 @@
     enabled: yes
     state: started
   register: ya_requestor_start
+
+- name: Install simple watchdog
+  when: ya_requestor_simple_watchdog_enabled
+  block:
+    - name: Compile simple watchdog (using docker)
+      when: not local_build_use_podman
+      delegate_to: localhost
+      run_once: yes
+      become: no
+      shell:
+        cmd: docker run --pull=always --rm --user="$(id -u):$(id -g)" -v "$PWD":/usr/src/myapp -w /usr/src/myapp rust:bullseye cargo build --release
+        chdir: roles/ya-requestor/files/simple_watchdog/
+        # don't use 'creates:' here, to always get it built using latest updates
+
+    - name: Compile simple watchdog (using podman)
+      when: local_build_use_podman
+      delegate_to: localhost
+      run_once: yes
+      become: no
+      shell:
+        cmd: podman run --pull=always --rm --userns=keep-id --user="$(id -u):$(id -g)" -v "$PWD":/usr/src/myapp -w /usr/src/myapp docker.io/library/rust:bullseye cargo build --release
+        chdir: roles/ya-requestor/files/simple_watchdog/
+        # don't use 'creates:' here, to always get it built using latest updates
+
+    - name: Install simple watchdog binary
+      copy:
+        src: roles/ya-requestor/files/simple_watchdog/target/release/simple_watchdog
+        dest: "{{ ya_requestor_dir }}/simple_watchdog"
+        mode: '0755'
+
+    - name: Install simple watchdog service
+      template:
+        src: "simple_watchdog.{{ item }}.j2"
+        dest: "{{ ansible_user_dir }}/.config/systemd/user/{{ ya_requestor_unit_base_name }}_simple_watchdog.{{ item }}"
+      loop:
+        - service
+        - timer
+
+    - name: Start simple watchdog service
+      systemd:
+        scope: user
+        daemon_reload: yes
+        name: "{{ ya_requestor_unit_base_name }}_simple_watchdog.timer"
+        enabled: yes
+        state: started
+
+- name: Stop simple watchdog service
+  when: not ya_requestor_simple_watchdog_enabled
+  systemd:
+    scope: user
+    daemon_reload: yes
+    name: "{{ ya_requestor_unit_base_name }}_simple_watchdog.timer"
+    enabled: no
+    state: stopped
+  ignore_errors: yes  # go on if unit doesn't exist
