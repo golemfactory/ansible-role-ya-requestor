@@ -7,9 +7,11 @@ ya_requestor_yagna_url: "https://github.com/golemfactory/yagna/releases/download
 ya_requestor_payment_driver: ""
 ya_requestor_payment_network: ""
 
-ya_requestor_gsb_url: tcp://127.0.0.1:7464
+ya_requestor_gsb_url: "unix://{{ ya_requestor_dir }}/gsb.sock"
 ya_requestor_yagna_api_url_ip: 127.0.0.1
 ya_requestor_yagna_api_url_port: 7465
+ya_requestor_net_bind_ip: 0.0.0.0
+ya_requestor_net_bind_port: 11500
 
 ya_requestor_run_yagna_service: yes
 
