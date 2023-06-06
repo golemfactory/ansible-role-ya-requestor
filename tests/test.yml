@@ -1,6 +1,6 @@
 - hosts: all
   vars:
-    ya_requestor_install_promtail: yes
-    ya_requestor_run_promtail_service: yes
+    ya_requestor_promtail_install: yes
+    ya_requestor_promtail_run_service: yes
   roles:
     - ya_requestor
