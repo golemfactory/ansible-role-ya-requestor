@@ -1,7 +1,7 @@
 ya_requestor_name: example
 
 ya_requestor_yagna_package_prefix: golem-requestor-linux
-ya_requestor_yagna_version: v0.12.1
+ya_requestor_yagna_version: v0.12.2
 ya_requestor_yagna_url: "https://github.com/golemfactory/yagna/releases/download/{{ ya_requestor_yagna_version }}/{{ ya_requestor_yagna_package_prefix }}-{{ ya_requestor_yagna_version }}.tar.gz"
 
 ya_requestor_payment_driver: ""
