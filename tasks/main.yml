@@ -1,6 +1,6 @@
 - name: Validate variables
   assert:
-    that: ya_requestor_promtail_install if ya_requestor_promtail_run_service else True
+    that: (ya_requestor_promtail_install if ya_requestor_promtail_run_service else True)
 
 - name: Create releases directory
   file:
