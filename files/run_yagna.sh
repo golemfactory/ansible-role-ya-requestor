@@ -7,7 +7,7 @@ die() {
 
 . .env
 
-ulimit -n 10000
+ulimit -n ${YA_MAX_DESCRIPTOR_FILES}
 
 if [[ -n "${YAGNA_API_URL+isset}" ]]; then
     die "use YAGNA_API_URL_IP and YAGNA_API_URL_PORT instead"

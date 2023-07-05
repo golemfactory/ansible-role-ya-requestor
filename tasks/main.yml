@@ -48,11 +48,14 @@
     dest: "{{ ya_requestor_dir }}/.env"
   notify: Restart requestor
 
-- name: Install run_yagna.sh
+- name: Install helper scripts
   copy:
-    src: run_yagna.sh
-    dest: "{{ ya_requestor_dir }}/run_yagna.sh"
+    src: "{{ item }}"
+    dest: "{{ ya_requestor_dir }}/{{ item }}"
     mode: "755"
+  loop:
+    - "run_yagna.sh"
+    - "fix_payment_initialization.sh"
   notify: Restart requestor
 
 - name: Configure promtail
@@ -104,6 +107,15 @@
     enabled: yes
     state: started
   register: ya_requestor_start
+
+- name: Wait a bit before applying  workaround script so that we don't run into 429 Too Many Requests
+  wait_for:
+    timeout: 5
+
+- name: Apply the payment initialization workaround script
+  shell:
+    chdir: "{{ ya_requestor_dir }}"
+    cmd: "./fix_payment_initialization.sh"
 
 - name: Install simple watchdog
   when: ya_requestor_simple_watchdog_enabled

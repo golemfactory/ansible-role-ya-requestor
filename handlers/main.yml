@@ -7,11 +7,20 @@
     state: restarted
   when: (ya_requestor_promtail_start | default({})) is not changed
 
-- name: Restart requestor
+- name: Restart requestor service
+  listen: "Restart requestor"
   systemd:
     scope: user
     daemon_reload: yes
     name: "{{ ya_requestor_yagna_unit_name }}"
     enabled: yes
     state: restarted
+  when: (ya_requestor_start | default({})) is not changed
+
+# Note: This is a workaround fixing the issue of payment initializations disappearing after daemon restart
+- name: Make sure that the payment payment account is fully initialized
+  shell:
+    chdir: "{{ ya_requestor_yagna_dir }}"
+    cmd: "./yagna payment init --network {{ ya_requestor_payment_network}} --driver {{ ya_requestor_payment_driver }} -g {{ ya_requestor_gsb_url }}"
+  listen: "Restart requestor"
   when: (ya_requestor_start | default({})) is not changed

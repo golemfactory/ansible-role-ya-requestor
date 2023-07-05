@@ -4,8 +4,8 @@ ya_requestor_yagna_package_prefix: golem-requestor-linux
 ya_requestor_yagna_version: v0.12.2
 ya_requestor_yagna_url: "https://github.com/golemfactory/yagna/releases/download/{{ ya_requestor_yagna_version }}/{{ ya_requestor_yagna_package_prefix }}-{{ ya_requestor_yagna_version }}.tar.gz"
 
-ya_requestor_payment_driver: ""
-ya_requestor_payment_network: ""
+ya_requestor_payment_driver: "erc20"
+ya_requestor_payment_network: "mumbai"
 
 ya_requestor_gsb_url: "unix://{{ ya_requestor_dir }}/gsb.sock"
 ya_requestor_yagna_api_url_ip: 127.0.0.1
@@ -30,3 +30,8 @@ local_build_use_podman: no
 ya_requestor_simple_watchdog_when: hourly
 # _time_window is a expression of https://crates.io/crates/duration-string
 ya_requestor_simple_watchdog_time_window: 1h
+
+# LIMITS CONTROL
+ya_requestor_mem_high: 800M
+ya_requestor_mem_max: 1G
+ya_requestor_descriptor_files_max: 10000
