@@ -108,10 +108,6 @@
     state: started
   register: ya_requestor_start
 
-- name: Wait a bit before applying  workaround script so that we don't run into 429 Too Many Requests
-  wait_for:
-    timeout: 5
-
 - name: Apply the payment initialization workaround script
   shell:
     chdir: "{{ ya_requestor_dir }}"
