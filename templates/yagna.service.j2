@@ -11,7 +11,7 @@ LimitNOFILE={{ ya_requestor_descriptor_files_max }}
 Restart=always
 MemoryHigh={{ ya_requestor_mem_high }}
 MemoryMax={{ ya_requestor_mem_max }}
-ExecPostStart={{ ya_requestor_dir }}/fix_payment_initialization.sh
+ExecStartPost={{ ya_requestor_dir }}/fix_payment_initialization.sh
 
 [Install]
 WantedBy=default.target
