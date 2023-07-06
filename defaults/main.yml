@@ -32,6 +32,5 @@ ya_requestor_simple_watchdog_when: hourly
 ya_requestor_simple_watchdog_time_window: 1h
 
 # LIMITS CONTROL
-ya_requestor_mem_high: 800M
-ya_requestor_mem_max: 1G
+ya_requestor_mem_max: 800M
 ya_requestor_descriptor_files_max: 10000

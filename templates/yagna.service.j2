@@ -9,7 +9,6 @@ ExecStart={{ ya_requestor_dir }}/run_yagna.sh
 TimeoutStartSec=10m
 LimitNOFILE={{ ya_requestor_descriptor_files_max }}
 Restart=always
-MemoryHigh={{ ya_requestor_mem_high }}
 MemoryMax={{ ya_requestor_mem_max }}
 ExecStartPost={{ ya_requestor_dir }}/fix_payment_initialization.sh
 
