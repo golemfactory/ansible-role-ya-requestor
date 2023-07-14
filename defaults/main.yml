@@ -6,6 +6,7 @@ ya_requestor_yagna_url: "https://github.com/golemfactory/yagna/releases/download
 
 ya_requestor_payment_driver: "erc20"
 ya_requestor_payment_network: "mumbai"
+ya_requestor_mumbai_geth_addr:
 
 ya_requestor_gsb_url: "unix://{{ ya_requestor_dir }}/gsb.sock"
 ya_requestor_yagna_api_url_ip: 127.0.0.1
