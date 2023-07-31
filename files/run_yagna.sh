@@ -7,7 +7,8 @@ die() {
 
 . .env
 
-ulimit -n 10000
+# raise the soft limit to the value of hard limit
+ulimit -S -n "$(ulimit -H -n)"
 
 if [[ -n "${YAGNA_API_URL+isset}" ]]; then
     die "use YAGNA_API_URL_IP and YAGNA_API_URL_PORT instead"
