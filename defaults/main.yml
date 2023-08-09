@@ -1,4 +1,5 @@
 ya_requestor_name: example
+ya_requestor_dir: "{{ ansible_user_dir }}/{{ ya_requestor_name }}"
 
 ya_requestor_yagna_package_prefix: golem-requestor-linux
 ya_requestor_yagna_version: v0.12.2
@@ -10,7 +11,10 @@ ya_requestor_yagna_api_url_port: 7465
 ya_requestor_net_bind_ip: 0.0.0.0
 ya_requestor_net_bind_port: 11500
 
+ya_requestor_extra_env: ""
+
 ya_requestor_run_yagna_service: yes
+ya_requestor_yagna_service_extra_unit_directives: ""
 
 ya_requestor_promtail_install: no
 ya_requestor_promtail_run_service: no
@@ -19,11 +23,14 @@ ya_requestor_promtail_version: v2.8.3
 ya_requestor_promtail_url: "https://github.com/grafana/loki/releases/download/{{ ya_requestor_promtail_version }}/promtail-linux-amd64.zip"
 ya_requestor_loki_url: "http://ip_or_hostname_where_loki_runns:3100/loki/api/v1/push"
 
-ya_requestor_extra_env: ""
-
 ya_requestor_simple_watchdog_enabled: no
 local_build_use_podman: no
 # _when is a systemd.time expression
 ya_requestor_simple_watchdog_when: hourly
 # _time_window is a expression of https://crates.io/crates/duration-string
 ya_requestor_simple_watchdog_time_window: 1h
+ya_requestor_simple_watchdog_manage_units:
+  - "{{ ya_requestor_yagna_unit_name }}.service"
+
+# stop.yml
+ya_requestor_stop_purge: false

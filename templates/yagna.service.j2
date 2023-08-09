@@ -1,6 +1,7 @@
 [Unit]
 Description={{ ya_requestor_name }} ya-requestor yagna
 After=network.target
+{{ ya_requestor_yagna_service_extra_unit_directives }}
 
 [Service]
 Type=notify

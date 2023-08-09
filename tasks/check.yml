@@ -1,0 +1,25 @@
+- name: Check promtail
+  when: ya_requestor_promtail_run_service
+  command: "systemctl --user status {{ ya_requestor_yagna_unit_name }}-promtail"
+  changed_when: no
+  ignore_errors: yes
+
+- name: Check ya-requestor yagna
+  when: ya_requestor_run_yagna_service
+  command: "systemctl --user status {{ ya_requestor_yagna_unit_name }}"
+  changed_when: no
+  ignore_errors: yes
+
+- name: Check simple watchdog timer
+  when: ya_requestor_simple_watchdog_enabled
+  command: "systemctl --user status {{ ya_requestor_unit_base_name }}_simple_watchdog.timer"
+  changed_when: no
+  ignore_errors: yes
+
+- name: Check simple watchdog service
+  when: ya_requestor_simple_watchdog_enabled
+  command: "systemctl --user status {{ ya_requestor_unit_base_name }}_simple_watchdog.service"
+  register: ya_requestor_simple_watchdog_status
+  changed_when: no
+  failed_when: ya_requestor_simple_watchdog_status.rc not in [0, 3]
+  ignore_errors: yes

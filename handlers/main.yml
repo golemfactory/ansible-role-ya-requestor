@@ -5,7 +5,9 @@
     name: "{{ ya_requestor_yagna_unit_name }}-promtail"
     enabled: yes
     state: restarted
-  when: (ya_requestor_promtail_start | default({})) is not changed
+  when:
+    - ya_requestor_promtail_run_service
+    - (ya_requestor_promtail_start | default({})) is not changed
 
 - name: Restart requestor
   systemd:
@@ -14,4 +16,6 @@
     name: "{{ ya_requestor_yagna_unit_name }}"
     enabled: yes
     state: restarted
-  when: (ya_requestor_start | default({})) is not changed
+  when:
+    - ya_requestor_run_yagna_service
+    - (ya_requestor_start | default({})) is not changed

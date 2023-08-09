@@ -1,0 +1,27 @@
+- setup:
+
+# don't stop promtail
+
+- name: Stop ya-requestor yagna
+  systemd:
+    scope: user
+    name: "{{ ya_requestor_yagna_unit_name }}"
+    enabled: no
+    state: stopped
+
+- name: Stop simple watchdog service
+  systemd:
+    scope: user
+    name: "{{ ya_requestor_unit_base_name }}_simple_watchdog.timer"
+    enabled: no
+    state: stopped
+  ignore_errors: yes  # go on if unit doesn't exist
+
+- name: Purge datadir
+  when: ya_requestor_stop_purge
+  file:
+    path: "{{ ya_requestor_dir }}/yagna_datadir"
+    state: "{{ item }}"
+  loop:
+    - absent
+    - directory

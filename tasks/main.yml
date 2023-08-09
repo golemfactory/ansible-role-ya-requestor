@@ -44,7 +44,7 @@
 
 - name: Install .env
   template:
-    src: .env.j2
+    src: dot_env.j2
     dest: "{{ ya_requestor_dir }}/.env"
   notify: Restart requestor
 

@@ -1,0 +1,7 @@
+- name: Restart ya-requestor yagna
+  when: ya_requestor_run_yagna_service
+  systemd:
+    scope: user
+    name: "{{ ya_requestor_yagna_unit_name }}.service"
+    enabled: yes
+    state: restarted
