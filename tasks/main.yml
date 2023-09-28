@@ -167,3 +167,8 @@
     enabled: no
     state: stopped
   ignore_errors: yes  # go on if unit doesn't exist
+
+- name: Make sure that the .env file generated for yagna will be sourced by the user's .bashrc
+  lineinfile:
+    path: "{{ ansible_user_dir }}/.bashrc"
+    line: ". {{ ya_requestor_dir }}/.env"
